@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,7 +40,7 @@ public class TestLongStringMap
 	}
 
 	@Test
-	public void test() throws IOException, QueryException, SQLException
+	public void testBasics() throws IOException, QueryException, SQLException
 	{
 		Path file = Files.createTempFile("sqlite-map", ".sqlite");
 		SqliteDatabase database = new SqliteDatabase(file);
@@ -66,6 +68,50 @@ public class TestLongStringMap
 
 		Assert.assertFalse(map.isEmpty());
 		Assert.assertEquals(2, map.size());
+
+		database.getJdbcConnection().close();
+		Files.delete(file);
+	}
+
+	@Test
+	public void testKeySet() throws IOException, QueryException, SQLException
+	{
+		Path file = Files.createTempFile("sqlite-map", ".sqlite");
+		SqliteDatabase database = new SqliteDatabase(file);
+
+		LongStringMap map = map(database);
+		map.createTable();
+		database.getJdbcConnection().commit();
+
+		map.put(1L, "value 1");
+		map.put(2L, "value 2");
+
+		Set<Long> keys = map.keySet();
+		Assert.assertTrue(keys.contains(1L));
+		Assert.assertTrue(keys.contains(2L));
+		Assert.assertFalse(keys.contains(3L));
+
+		database.getJdbcConnection().close();
+		Files.delete(file);
+	}
+
+	@Test
+	public void testValues() throws IOException, QueryException, SQLException
+	{
+		Path file = Files.createTempFile("sqlite-map", ".sqlite");
+		SqliteDatabase database = new SqliteDatabase(file);
+
+		LongStringMap map = map(database);
+		map.createTable();
+		database.getJdbcConnection().commit();
+
+		map.put(1L, "value 1");
+		map.put(2L, "value 2");
+
+		Collection<String> values = map.values();
+		Assert.assertTrue(values.contains("value 1"));
+		Assert.assertTrue(values.contains("value 2"));
+		Assert.assertFalse(values.contains("value 3"));
 
 		database.getJdbcConnection().close();
 		Files.delete(file);

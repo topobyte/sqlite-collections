@@ -137,13 +137,13 @@ public class LongStringMap extends AbstractMap<Long, String>
 	@Override
 	public Set<Long> keySet()
 	{
-		return new LongSet(connection, table, 0);
+		return new LongSet(connection, table, 1);
 	}
 
 	@Override
 	public Collection<String> values()
 	{
-		return new StringSet(connection, table, 0);
+		return new StringSet(connection, table, 2);
 	}
 
 }
