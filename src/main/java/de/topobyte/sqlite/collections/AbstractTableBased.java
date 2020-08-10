@@ -78,13 +78,13 @@ public class AbstractTableBased
 		return select;
 	}
 
-	protected boolean tryContainsColumn(int index, ArgumentSetter argSetter)
-			throws QueryException
+	protected <E> boolean tryContainsColumn(int index, Object object,
+			ArgumentSetter<E> argSetter) throws QueryException
 	{
 		Select select = selectColumn(table.getColumn(index).getName());
 		try (IPreparedStatement stmt = connection
 				.prepareStatement(select.sql())) {
-			argSetter.setArguments(stmt);
+			argSetter.setArguments(stmt, 1, (E) object);
 			try (IResultSet results = stmt.executeQuery()) {
 				return results.next();
 			}

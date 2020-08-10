@@ -17,44 +17,18 @@
 
 package de.topobyte.sqlite.collections;
 
-import de.topobyte.jsqltables.table.Table;
-import de.topobyte.luqe.iface.IConnection;
-import de.topobyte.luqe.iface.QueryException;
-
-public class StringSet extends AbstractSet<String>
+public class CloseUtils
 {
 
-	public StringSet(IConnection connection, Table table)
+	public static void closeSilently(AutoCloseable results)
 	{
-		super(connection, table);
-	}
-
-	public StringSet(IConnection connection, Table table, int indexValues)
-	{
-		super(connection, table, indexValues);
-	}
-
-	@Override
-	public boolean contains(Object o)
-	{
-		try {
-			return tryContains(stmt -> {
-				stmt.setString(1, (String) o);
-			});
-		} catch (QueryException e) {
-			throw new RuntimeException("Error in contains()", e);
+		if (results == null) {
+			return;
 		}
-	}
-
-	@Override
-	public CloseableIterator<String> iterator()
-	{
 		try {
-			return tryIterator(r -> {
-				return r.getString(1);
-			});
-		} catch (QueryException e) {
-			throw new RuntimeException("Error in iterator()", e);
+			results.close();
+		} catch (Throwable e) {
+			// ignore silently
 		}
 	}
 

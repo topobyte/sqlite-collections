@@ -45,26 +45,14 @@ public class CloseableIterator<T> extends ResultsIterator<T>
 	@Override
 	public T retrieve(IResultSet results) throws QueryException
 	{
-		return resultsGetter.getResult(results);
+		return resultsGetter.getResult(results, 1);
 	}
 
 	@Override
 	public void close() throws IOException
 	{
-		if (results != null) {
-			try {
-				results.close();
-			} catch (QueryException e) {
-				// ignore silently
-			}
-		}
-		if (stmt != null) {
-			try {
-				stmt.close();
-			} catch (QueryException e) {
-				// ignore silently
-			}
-		}
+		CloseUtils.closeSilently(results);
+		CloseUtils.closeSilently(stmt);
 	}
 
 }

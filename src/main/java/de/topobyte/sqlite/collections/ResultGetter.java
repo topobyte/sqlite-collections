@@ -23,6 +23,6 @@ import de.topobyte.luqe.iface.QueryException;
 public interface ResultGetter<T>
 {
 
-	public T getResult(IResultSet results) throws QueryException;
+	public T getResult(IResultSet results, int index) throws QueryException;
 
 }

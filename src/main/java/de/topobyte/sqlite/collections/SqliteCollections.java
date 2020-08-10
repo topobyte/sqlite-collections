@@ -24,13 +24,63 @@ import de.topobyte.luqe.iface.IConnection;
 public class SqliteCollections
 {
 
-	public static LongStringMap getLongStringMap(IConnection connection,
-			String table, String columnKeys, String columnValues)
+	public static TableMap<Long, String> getLongStringMap(
+			IConnection connection, String table, String columnKeys,
+			String columnValues)
 	{
 		Table t = new Table(table);
 		t.addColumn(ColumnClass.LONG, columnKeys);
 		t.addColumn(ColumnClass.VARCHAR, columnValues);
-		return new LongStringMap(connection, t);
+		ArgumentSetterLong setterKeys = new ArgumentSetterLong();
+		ArgumentSetterString setterValues = new ArgumentSetterString();
+		ResultGetterLong getterKeys = new ResultGetterLong();
+		ResultGetterString getterValues = new ResultGetterString();
+		return new TableMap<>(connection, t, //
+				setterKeys, getterKeys, setterValues, getterValues,
+				new ArgumentSetterEntries<>(setterKeys, setterValues));
+	}
+
+	public static TableMap<String, Long> getStringLongMap(
+			IConnection connection, String table, String columnKeys,
+			String columnValues)
+	{
+		Table t = new Table(table);
+		t.addColumn(ColumnClass.VARCHAR, columnKeys);
+		t.addColumn(ColumnClass.LONG, columnValues);
+		ArgumentSetterString setterKeys = new ArgumentSetterString();
+		ArgumentSetterLong setterValues = new ArgumentSetterLong();
+		ResultGetterString getterKeys = new ResultGetterString();
+		ResultGetterLong getterValues = new ResultGetterLong();
+		return new TableMap<>(connection, t, //
+				setterKeys, getterKeys, setterValues, getterValues,
+				new ArgumentSetterEntries<>(setterKeys, setterValues));
+	}
+
+	public static TableSet<Long> longSet(IConnection connection, Table table)
+	{
+		return new TableSet<>(connection, table, new ArgumentSetterLong(),
+				new ResultGetterLong());
+	}
+
+	public static TableSet<Long> longSet(IConnection connection, Table table,
+			int indexValues)
+	{
+		return new TableSet<>(connection, table, new ArgumentSetterLong(),
+				new ResultGetterLong(), indexValues);
+	}
+
+	public static TableSet<String> stringSet(IConnection connection,
+			Table table)
+	{
+		return new TableSet<>(connection, table, new ArgumentSetterString(),
+				new ResultGetterString());
+	}
+
+	public static TableSet<String> stringSet(IConnection connection,
+			Table table, int indexValues)
+	{
+		return new TableSet<>(connection, table, new ArgumentSetterString(),
+				new ResultGetterString(), indexValues);
 	}
 
 }

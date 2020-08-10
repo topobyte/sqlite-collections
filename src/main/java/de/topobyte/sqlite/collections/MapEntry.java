@@ -17,13 +17,36 @@
 
 package de.topobyte.sqlite.collections;
 
-import de.topobyte.luqe.iface.IPreparedStatement;
-import de.topobyte.luqe.iface.QueryException;
+import java.util.Map.Entry;
 
-public interface BiArgumentSetter<A, B>
+public class MapEntry<K, V> implements Entry<K, V>
 {
 
-	public void setArguments(IPreparedStatement stmt, A key, B value)
-			throws QueryException;
+	private K key;
+	private V value;
+
+	public MapEntry(K key, V value)
+	{
+		this.key = key;
+		this.value = value;
+	}
+
+	@Override
+	public K getKey()
+	{
+		return key;
+	}
+
+	@Override
+	public V getValue()
+	{
+		return value;
+	}
+
+	@Override
+	public V setValue(V value)
+	{
+		throw new UnsupportedOperationException();
+	}
 
 }

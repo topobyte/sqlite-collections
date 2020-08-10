@@ -17,13 +17,16 @@
 
 package de.topobyte.sqlite.collections;
 
-import de.topobyte.luqe.iface.IPreparedStatement;
+import de.topobyte.luqe.iface.IResultSet;
 import de.topobyte.luqe.iface.QueryException;
 
-public interface ArgumentSetter<T>
+public class ResultGetterString implements ResultGetter<String>
 {
 
-	public void setArguments(IPreparedStatement stmt, int index, T object)
-			throws QueryException;
+	@Override
+	public String getResult(IResultSet results, int index) throws QueryException
+	{
+		return results.getString(index);
+	}
 
 }

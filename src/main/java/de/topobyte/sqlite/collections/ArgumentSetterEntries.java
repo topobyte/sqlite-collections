@@ -17,13 +17,30 @@
 
 package de.topobyte.sqlite.collections;
 
+import java.util.Map.Entry;
+
 import de.topobyte.luqe.iface.IPreparedStatement;
 import de.topobyte.luqe.iface.QueryException;
 
-public interface ArgumentSetter<T>
+public class ArgumentSetterEntries<K, V> implements ArgumentSetter<Entry<K, V>>
 {
 
-	public void setArguments(IPreparedStatement stmt, int index, T object)
-			throws QueryException;
+	private ArgumentSetter<K> argSetterKeys;
+	private ArgumentSetter<V> argSetterValues;
+
+	public ArgumentSetterEntries(ArgumentSetter<K> argSetterKeys,
+			ArgumentSetter<V> argSetterValues)
+	{
+		this.argSetterKeys = argSetterKeys;
+		this.argSetterValues = argSetterValues;
+	}
+
+	@Override
+	public void setArguments(IPreparedStatement stmt, int index,
+			Entry<K, V> object) throws QueryException
+	{
+		argSetterKeys.setArguments(stmt, index, object.getKey());
+		argSetterValues.setArguments(stmt, index + 1, object.getValue());
+	}
 
 }

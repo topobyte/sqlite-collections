@@ -32,7 +32,7 @@ import de.topobyte.luqe.jdbc.database.SqliteDatabase;
 public class TestLongStringMap
 {
 
-	private LongStringMap map(SqliteDatabase database)
+	private TableMap<Long, String> map(SqliteDatabase database)
 	{
 		return SqliteCollections.getLongStringMap(database.getConnection(),
 				"map", "key", "value");
@@ -44,7 +44,7 @@ public class TestLongStringMap
 		Path file = Files.createTempFile("sqlite-map", ".sqlite");
 		SqliteDatabase database = new SqliteDatabase(file);
 
-		LongStringMap map = map(database);
+		TableMap<Long, String> map = map(database);
 		map.createTable();
 		database.getJdbcConnection().commit();
 
@@ -78,14 +78,14 @@ public class TestLongStringMap
 		Path file = Files.createTempFile("sqlite-map", ".sqlite");
 		SqliteDatabase database = new SqliteDatabase(file);
 
-		LongStringMap map = map(database);
+		TableMap<Long, String> map = map(database);
 		map.createTable();
 		database.getJdbcConnection().commit();
 
 		map.put(1L, "value 1");
 		map.put(2L, "value 2");
 
-		LongSet keys = map.keySet();
+		TableSet<Long> keys = map.keySet();
 		Assert.assertTrue(keys.contains(1L));
 		Assert.assertTrue(keys.contains(2L));
 		Assert.assertFalse(keys.contains(3L));
@@ -109,14 +109,14 @@ public class TestLongStringMap
 		Path file = Files.createTempFile("sqlite-map", ".sqlite");
 		SqliteDatabase database = new SqliteDatabase(file);
 
-		LongStringMap map = map(database);
+		TableMap<Long, String> map = map(database);
 		map.createTable();
 		database.getJdbcConnection().commit();
 
 		map.put(1L, "value 1");
 		map.put(2L, "value 2");
 
-		StringSet values = map.values();
+		TableSet<String> values = map.values();
 		Assert.assertTrue(values.contains("value 1"));
 		Assert.assertTrue(values.contains("value 2"));
 		Assert.assertFalse(values.contains("value 3"));

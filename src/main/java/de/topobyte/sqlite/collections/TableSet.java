@@ -18,7 +18,6 @@
 package de.topobyte.sqlite.collections;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 import de.topobyte.jsqltables.query.Select;
@@ -29,33 +28,43 @@ import de.topobyte.luqe.iface.IPreparedStatement;
 import de.topobyte.luqe.iface.IResultSet;
 import de.topobyte.luqe.iface.QueryException;
 
-public abstract class AbstractSet<E> extends AbstractTableBased
-		implements Set<E>
+public class TableSet<E> extends AbstractTableBased implements Set<E>
 {
 
 	protected int indexValues;
 
-	public AbstractSet(IConnection connection, Table table)
+	private ArgumentSetter<E> argSetter;
+	private ResultGetter<E> resultGetter;
+
+	public TableSet(IConnection connection, Table table,
+			ArgumentSetter<E> argSetter, ResultGetter<E> resultGetter)
 	{
-		this(connection, table, 1);
+		this(connection, table, argSetter, resultGetter, 1);
 	}
 
-	public AbstractSet(IConnection connection, Table table, int indexValues)
+	public TableSet(IConnection connection, Table table,
+			ArgumentSetter<E> argSetter, ResultGetter<E> resultGetter,
+			int indexValues)
 	{
 		super(connection, table);
+		this.argSetter = argSetter;
+		this.resultGetter = resultGetter;
 		this.indexValues = indexValues;
 	}
 
-	protected boolean tryContains(ArgumentSetter argSetter)
-			throws QueryException
+	@Override
+	public boolean contains(Object o)
 	{
-		return tryContainsColumn(indexValues, argSetter);
+		try {
+			return tryContains(o);
+		} catch (QueryException e) {
+			throw new RuntimeException("Error in contains()", e);
+		}
 	}
 
-	@Override
-	public Iterator<E> iterator()
+	protected boolean tryContains(Object o) throws QueryException
 	{
-		throw new UnsupportedOperationException();
+		return tryContainsColumn(indexValues, o, argSetter);
 	}
 
 	@Override
@@ -112,8 +121,17 @@ public abstract class AbstractSet<E> extends AbstractTableBased
 		throw new UnsupportedOperationException();
 	}
 
-	protected CloseableIterator<E> tryIterator(ResultGetter<E> resultGetter)
-			throws QueryException
+	@Override
+	public CloseableIterator<E> iterator()
+	{
+		try {
+			return tryIterator();
+		} catch (QueryException e) {
+			throw new RuntimeException("Error in iterator()", e);
+		}
+	}
+
+	protected CloseableIterator<E> tryIterator() throws QueryException
 	{
 		String col = table.getColumn(indexValues).getName();
 		Select select = selectAll(col);

@@ -20,10 +20,14 @@ package de.topobyte.sqlite.collections;
 import de.topobyte.luqe.iface.IPreparedStatement;
 import de.topobyte.luqe.iface.QueryException;
 
-public interface ArgumentSetter<T>
+public class ArgumentSetterString implements ArgumentSetter<String>
 {
 
-	public void setArguments(IPreparedStatement stmt, int index, T object)
-			throws QueryException;
+	@Override
+	public void setArguments(IPreparedStatement stmt, int index, String object)
+			throws QueryException
+	{
+		stmt.setString(index, object);
+	}
 
 }
