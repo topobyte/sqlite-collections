@@ -21,8 +21,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import de.topobyte.jsqltables.query.Select;
+import de.topobyte.jsqltables.query.select.NormalColumn;
 import de.topobyte.jsqltables.table.Table;
 import de.topobyte.luqe.iface.IConnection;
+import de.topobyte.luqe.iface.IPreparedStatement;
+import de.topobyte.luqe.iface.IResultSet;
 import de.topobyte.luqe.iface.QueryException;
 
 public abstract class AbstractSet<E> extends AbstractTableBased
@@ -106,6 +110,23 @@ public abstract class AbstractSet<E> extends AbstractTableBased
 	public void clear()
 	{
 		throw new UnsupportedOperationException();
+	}
+
+	protected CloseableIterator<E> tryIterator(ResultGetter<E> resultGetter)
+			throws QueryException
+	{
+		String col = table.getColumn(indexValues).getName();
+		Select select = selectAll(col);
+		IPreparedStatement stmt = connection.prepareStatement(select.sql());
+		IResultSet results = stmt.executeQuery();
+		return Iterators.iterator(stmt, results, resultGetter);
+	}
+
+	protected Select selectAll(String col)
+	{
+		Select select = new Select(table);
+		select.addSelectColumn(new NormalColumn(select.getMainTable(), col));
+		return select;
 	}
 
 }

@@ -17,9 +17,7 @@
 
 package de.topobyte.sqlite.collections;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import de.topobyte.jsqltables.table.Table;
 import de.topobyte.luqe.iface.IConnection;
@@ -135,13 +133,13 @@ public class StringLongMap extends AbstractMap<String, Long>
 	}
 
 	@Override
-	public Set<String> keySet()
+	public StringSet keySet()
 	{
 		return new StringSet(connection, table, 1);
 	}
 
 	@Override
-	public Collection<Long> values()
+	public LongSet values()
 	{
 		return new LongSet(connection, table, 2);
 	}

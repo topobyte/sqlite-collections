@@ -46,4 +46,16 @@ public class StringSet extends AbstractSet<String>
 		}
 	}
 
+	@Override
+	public CloseableIterator<String> iterator()
+	{
+		try {
+			return tryIterator(r -> {
+				return r.getString(1);
+			});
+		} catch (QueryException e) {
+			throw new RuntimeException("Error in iterator()", e);
+		}
+	}
+
 }

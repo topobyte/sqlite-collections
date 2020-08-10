@@ -17,45 +17,20 @@
 
 package de.topobyte.sqlite.collections;
 
-import de.topobyte.jsqltables.table.Table;
-import de.topobyte.luqe.iface.IConnection;
-import de.topobyte.luqe.iface.QueryException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-public class LongSet extends AbstractSet<Long>
+public class IteratorUtil
 {
 
-	public LongSet(IConnection connection, Table table)
+	public static <E> Set<E> toSet(Iterator<E> iterator)
 	{
-		super(connection, table);
-	}
-
-	public LongSet(IConnection connection, Table table, int indexValues)
-	{
-		super(connection, table, indexValues);
-	}
-
-	@Override
-	public boolean contains(Object o)
-	{
-		try {
-			return tryContains(stmt -> {
-				stmt.setLong(1, (Long) o);
-			});
-		} catch (QueryException e) {
-			throw new RuntimeException("Error in contains()", e);
+		Set<E> set = new HashSet<>();
+		while (iterator.hasNext()) {
+			set.add(iterator.next());
 		}
-	}
-
-	@Override
-	public CloseableIterator<Long> iterator()
-	{
-		try {
-			return tryIterator(r -> {
-				return r.getLong(1);
-			});
-		} catch (QueryException e) {
-			throw new RuntimeException("Error in iterator()", e);
-		}
+		return set;
 	}
 
 }

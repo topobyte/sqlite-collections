@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -86,10 +85,15 @@ public class TestLongStringMap
 		map.put(1L, "value 1");
 		map.put(2L, "value 2");
 
-		Set<Long> keys = map.keySet();
+		LongSet keys = map.keySet();
 		Assert.assertTrue(keys.contains(1L));
 		Assert.assertTrue(keys.contains(2L));
 		Assert.assertFalse(keys.contains(3L));
+
+		try (CloseableIterator<Long> iterator = keys.iterator()) {
+			Set<Long> iterated = IteratorUtil.toSet(keys.iterator());
+			Assert.assertEquals(2, iterated.size());
+		}
 
 		database.getJdbcConnection().close();
 		Files.delete(file);
@@ -108,10 +112,15 @@ public class TestLongStringMap
 		map.put(1L, "value 1");
 		map.put(2L, "value 2");
 
-		Collection<String> values = map.values();
+		StringSet values = map.values();
 		Assert.assertTrue(values.contains("value 1"));
 		Assert.assertTrue(values.contains("value 2"));
 		Assert.assertFalse(values.contains("value 3"));
+
+		try (CloseableIterator<String> iterator = values.iterator()) {
+			Set<String> iterated = IteratorUtil.toSet(values.iterator());
+			Assert.assertEquals(2, iterated.size());
+		}
 
 		database.getJdbcConnection().close();
 		Files.delete(file);
