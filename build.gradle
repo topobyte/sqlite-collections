@@ -2,7 +2,7 @@ wrapper {
     gradleVersion = '6.5.1'
 }
 
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
@@ -28,6 +28,13 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+    api 'de.topobyte:luqe-core:0.2.1'
+    api 'de.topobyte:jsqltables:0.1.0'
+    testImplementation 'de.topobyte:luqe-jdbc:0.2.1'
+    testRuntimeOnly 'org.xerial:sqlite-jdbc:3.27.2.1'
+
+    testImplementation 'junit:junit:4.13'
+    testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.3'
 }
 
 java {
