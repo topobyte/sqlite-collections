@@ -23,7 +23,9 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Set;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import de.topobyte.luqe.iface.QueryException;
@@ -32,10 +34,31 @@ import de.topobyte.luqe.jdbc.database.SqliteDatabase;
 public class TestLongStringMap
 {
 
+	private Path file;
+	private SqliteDatabase database;
+	private TableMap<Long, String> map;
+
 	private TableMap<Long, String> map(SqliteDatabase database)
 	{
 		return SqliteCollections.getLongStringMap(database.getConnection(),
 				"map", "key", "value");
+	}
+
+	@Before
+	public void setup() throws IOException, QueryException
+	{
+		file = Files.createTempFile("sqlite-map", ".sqlite");
+		database = new SqliteDatabase(file);
+
+		map = map(database);
+		map.createTable();
+	}
+
+	@After
+	public void tearDown() throws SQLException, IOException
+	{
+		database.getJdbcConnection().close();
+		Files.delete(file);
 	}
 
 	private void insertSomeData(TableMap<Long, String> map)
@@ -45,23 +68,14 @@ public class TestLongStringMap
 	}
 
 	@Test
-	public void testBasics() throws IOException, QueryException, SQLException
+	public void testBasics()
 	{
-		Path file = Files.createTempFile("sqlite-map", ".sqlite");
-		SqliteDatabase database = new SqliteDatabase(file);
-
-		TableMap<Long, String> map = map(database);
-		map.createTable();
-
 		Assert.assertTrue(map.isEmpty());
 		Assert.assertEquals(0, map.size());
 
 		insertSomeData(map);
 
 		testAssumptionsAfterInsertion(map);
-
-		database.getJdbcConnection().close();
-		Files.delete(file);
 	}
 
 	private void testAssumptionsAfterInsertion(TableMap<Long, String> map)
@@ -99,20 +113,16 @@ public class TestLongStringMap
 	}
 
 	@Test
-	public void testKeySet() throws IOException, QueryException, SQLException
+	public void testKeySet()
 	{
-		Path file = Files.createTempFile("sqlite-map", ".sqlite");
-		SqliteDatabase database = new SqliteDatabase(file);
-
-		TableMap<Long, String> map = map(database);
-		map.createTable();
-
 		insertSomeData(map);
 
 		TableSet<Long> keys = map.keySet();
 		Assert.assertTrue(keys.contains(1L));
 		Assert.assertTrue(keys.contains(2L));
 		Assert.assertFalse(keys.contains(3L));
+
+		keys.iterator();
 
 		try (CloseableIterator<Long> iterator = keys.iterator()) {
 			Set<Long> iterated = IteratorUtil.toSet(keys.iterator());
@@ -122,20 +132,11 @@ public class TestLongStringMap
 		try (CloseableIterator<?> iterator = keys.iterator()) {
 			Assert.assertEquals(2, IteratorUtil.count(iterator));
 		}
-
-		database.getJdbcConnection().close();
-		Files.delete(file);
 	}
 
 	@Test
-	public void testValues() throws IOException, QueryException, SQLException
+	public void testValues()
 	{
-		Path file = Files.createTempFile("sqlite-map", ".sqlite");
-		SqliteDatabase database = new SqliteDatabase(file);
-
-		TableMap<Long, String> map = map(database);
-		map.createTable();
-
 		insertSomeData(map);
 
 		TableSet<String> values = map.values();
@@ -151,20 +152,11 @@ public class TestLongStringMap
 		try (CloseableIterator<String> iterator = values.iterator()) {
 			Assert.assertEquals(2, IteratorUtil.count(iterator));
 		}
-
-		database.getJdbcConnection().close();
-		Files.delete(file);
 	}
 
 	@Test
-	public void testClear() throws IOException, QueryException, SQLException
+	public void testClear()
 	{
-		Path file = Files.createTempFile("sqlite-map", ".sqlite");
-		SqliteDatabase database = new SqliteDatabase(file);
-
-		TableMap<Long, String> map = map(database);
-		map.createTable();
-
 		Assert.assertTrue(map.isEmpty());
 		Assert.assertEquals(0, map.size());
 
@@ -175,20 +167,11 @@ public class TestLongStringMap
 		map.clear();
 
 		testClear(map);
-
-		database.getJdbcConnection().close();
-		Files.delete(file);
 	}
 
 	@Test
-	public void testRemove() throws IOException, QueryException, SQLException
+	public void testRemove()
 	{
-		Path file = Files.createTempFile("sqlite-map", ".sqlite");
-		SqliteDatabase database = new SqliteDatabase(file);
-
-		TableMap<Long, String> map = map(database);
-		map.createTable();
-
 		Assert.assertTrue(map.isEmpty());
 		Assert.assertEquals(0, map.size());
 
@@ -211,20 +194,11 @@ public class TestLongStringMap
 
 		Assert.assertFalse(map.isEmpty());
 		Assert.assertEquals(1, map.size());
-
-		database.getJdbcConnection().close();
-		Files.delete(file);
 	}
 
 	@Test
-	public void testRemoveAll() throws IOException, QueryException, SQLException
+	public void testRemoveAll()
 	{
-		Path file = Files.createTempFile("sqlite-map", ".sqlite");
-		SqliteDatabase database = new SqliteDatabase(file);
-
-		TableMap<Long, String> map = map(database);
-		map.createTable();
-
 		Assert.assertTrue(map.isEmpty());
 		Assert.assertEquals(0, map.size());
 
@@ -236,9 +210,6 @@ public class TestLongStringMap
 		map.remove(2L);
 
 		testClear(map);
-
-		database.getJdbcConnection().close();
-		Files.delete(file);
 	}
 
 }

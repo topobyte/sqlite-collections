@@ -17,16 +17,13 @@
 
 package de.topobyte.sqlite.collections;
 
-import java.io.Closeable;
-import java.io.IOException;
-
 import de.topobyte.luqe.iface.IPreparedStatement;
 import de.topobyte.luqe.iface.IResultSet;
 import de.topobyte.luqe.iface.QueryException;
 import de.topobyte.luqe.util.ResultsIterator;
 
 public class CloseableIterator<T> extends ResultsIterator<T>
-		implements Closeable
+		implements AutoCloseable
 {
 
 	private IPreparedStatement stmt;
@@ -49,7 +46,7 @@ public class CloseableIterator<T> extends ResultsIterator<T>
 	}
 
 	@Override
-	public void close() throws IOException
+	public void close()
 	{
 		CloseUtils.closeSilently(results);
 		CloseUtils.closeSilently(stmt);
