@@ -1,8 +1,8 @@
 # About
 
-This is a Java library provides collection implementations based on SQLite.
+This is a Java library that provides collection implementations based on SQLite.
 
-Using it is usefule in the following scenarios:
+Using it is useful in the following scenarios:
 
 A) You need to store something in a huge collection that does not fit into
 memory. By using the SQLite-based collections, you can move the storage to disk
