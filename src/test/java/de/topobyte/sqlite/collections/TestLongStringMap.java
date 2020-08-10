@@ -38,6 +38,12 @@ public class TestLongStringMap
 				"map", "key", "value");
 	}
 
+	private void insertSomeData(TableMap<Long, String> map)
+	{
+		map.put(1L, "value 1");
+		map.put(2L, "value 2");
+	}
+
 	@Test
 	public void testBasics() throws IOException, QueryException, SQLException
 	{
@@ -46,14 +52,20 @@ public class TestLongStringMap
 
 		TableMap<Long, String> map = map(database);
 		map.createTable();
-		database.getJdbcConnection().commit();
 
 		Assert.assertTrue(map.isEmpty());
 		Assert.assertEquals(0, map.size());
 
-		map.put(1L, "value 1");
-		map.put(2L, "value 2");
+		insertSomeData(map);
 
+		testAssumptionsAfterInsertion(map);
+
+		database.getJdbcConnection().close();
+		Files.delete(file);
+	}
+
+	private void testAssumptionsAfterInsertion(TableMap<Long, String> map)
+	{
 		Assert.assertEquals("value 1", map.get(1L));
 		Assert.assertEquals("value 2", map.get(2L));
 
@@ -67,9 +79,23 @@ public class TestLongStringMap
 
 		Assert.assertFalse(map.isEmpty());
 		Assert.assertEquals(2, map.size());
+	}
 
-		database.getJdbcConnection().close();
-		Files.delete(file);
+	private void testClear(TableMap<Long, String> map)
+	{
+		Assert.assertEquals(null, map.get(1L));
+		Assert.assertEquals(null, map.get(2L));
+
+		Assert.assertFalse(map.containsKey(1L));
+		Assert.assertFalse(map.containsKey(2L));
+		Assert.assertFalse(map.containsKey(3L));
+
+		Assert.assertFalse(map.containsValue("value 1"));
+		Assert.assertFalse(map.containsValue("value 2"));
+		Assert.assertFalse(map.containsValue("value 3"));
+
+		Assert.assertTrue(map.isEmpty());
+		Assert.assertEquals(0, map.size());
 	}
 
 	@Test
@@ -80,10 +106,8 @@ public class TestLongStringMap
 
 		TableMap<Long, String> map = map(database);
 		map.createTable();
-		database.getJdbcConnection().commit();
 
-		map.put(1L, "value 1");
-		map.put(2L, "value 2");
+		insertSomeData(map);
 
 		TableSet<Long> keys = map.keySet();
 		Assert.assertTrue(keys.contains(1L));
@@ -111,10 +135,8 @@ public class TestLongStringMap
 
 		TableMap<Long, String> map = map(database);
 		map.createTable();
-		database.getJdbcConnection().commit();
 
-		map.put(1L, "value 1");
-		map.put(2L, "value 2");
+		insertSomeData(map);
 
 		TableSet<String> values = map.values();
 		Assert.assertTrue(values.contains("value 1"));
@@ -129,6 +151,91 @@ public class TestLongStringMap
 		try (CloseableIterator<String> iterator = values.iterator()) {
 			Assert.assertEquals(2, IteratorUtil.count(iterator));
 		}
+
+		database.getJdbcConnection().close();
+		Files.delete(file);
+	}
+
+	@Test
+	public void testClear() throws IOException, QueryException, SQLException
+	{
+		Path file = Files.createTempFile("sqlite-map", ".sqlite");
+		SqliteDatabase database = new SqliteDatabase(file);
+
+		TableMap<Long, String> map = map(database);
+		map.createTable();
+
+		Assert.assertTrue(map.isEmpty());
+		Assert.assertEquals(0, map.size());
+
+		insertSomeData(map);
+
+		testAssumptionsAfterInsertion(map);
+
+		map.clear();
+
+		testClear(map);
+
+		database.getJdbcConnection().close();
+		Files.delete(file);
+	}
+
+	@Test
+	public void testRemove() throws IOException, QueryException, SQLException
+	{
+		Path file = Files.createTempFile("sqlite-map", ".sqlite");
+		SqliteDatabase database = new SqliteDatabase(file);
+
+		TableMap<Long, String> map = map(database);
+		map.createTable();
+
+		Assert.assertTrue(map.isEmpty());
+		Assert.assertEquals(0, map.size());
+
+		insertSomeData(map);
+
+		testAssumptionsAfterInsertion(map);
+
+		map.remove(1L);
+
+		Assert.assertEquals(null, map.get(1L));
+		Assert.assertEquals("value 2", map.get(2L));
+
+		Assert.assertFalse(map.containsKey(1L));
+		Assert.assertTrue(map.containsKey(2L));
+		Assert.assertFalse(map.containsKey(3L));
+
+		Assert.assertFalse(map.containsValue("value 1"));
+		Assert.assertTrue(map.containsValue("value 2"));
+		Assert.assertFalse(map.containsValue("value 3"));
+
+		Assert.assertFalse(map.isEmpty());
+		Assert.assertEquals(1, map.size());
+
+		database.getJdbcConnection().close();
+		Files.delete(file);
+	}
+
+	@Test
+	public void testRemoveAll() throws IOException, QueryException, SQLException
+	{
+		Path file = Files.createTempFile("sqlite-map", ".sqlite");
+		SqliteDatabase database = new SqliteDatabase(file);
+
+		TableMap<Long, String> map = map(database);
+		map.createTable();
+
+		Assert.assertTrue(map.isEmpty());
+		Assert.assertEquals(0, map.size());
+
+		insertSomeData(map);
+
+		testAssumptionsAfterInsertion(map);
+
+		map.remove(1L);
+		map.remove(2L);
+
+		testClear(map);
 
 		database.getJdbcConnection().close();
 		Files.delete(file);
