@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.After;
@@ -61,7 +63,7 @@ public class TestLongStringMap
 		Files.delete(file);
 	}
 
-	private void insertSomeData(TableMap<Long, String> map)
+	private void insertSomeData(Map<Long, String> map)
 	{
 		map.put(1L, "value 1");
 		map.put(2L, "value 2");
@@ -210,6 +212,19 @@ public class TestLongStringMap
 		map.remove(2L);
 
 		testClear(map);
+	}
+
+	@Test
+	public void testPutAll()
+	{
+		Assert.assertTrue(map.isEmpty());
+		Assert.assertEquals(0, map.size());
+
+		Map<Long, String> temp = new HashMap<>();
+		insertSomeData(temp);
+		map.putAll(temp);
+
+		testAssumptionsAfterInsertion(map);
 	}
 
 }
