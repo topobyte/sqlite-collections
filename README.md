@@ -2,6 +2,17 @@
 
 This is a Java library provides collection implementations based on SQLite.
 
+Using it is usefule in the following scenarios:
+
+A) You need to store something in a huge collection that does not fit into
+memory. By using the SQLite-based collections, you can move the storage to disk
+without having to refactor your collection-API-based code.
+
+B) You have some data stored in an existing SQLite database and you want to
+access some part of it using the collections API. Just wrap the existing
+database into one of the collections and don't worry about changing your
+existing code.
+
 # License
 
 This library is released under the terms of the GNU Lesser General Public
