@@ -95,6 +95,10 @@ public class TestLongStringMap
 			Assert.assertEquals(2, iterated.size());
 		}
 
+		try (CloseableIterator<?> iterator = keys.iterator()) {
+			Assert.assertEquals(2, IteratorUtil.count(iterator));
+		}
+
 		database.getJdbcConnection().close();
 		Files.delete(file);
 	}
@@ -117,9 +121,13 @@ public class TestLongStringMap
 		Assert.assertTrue(values.contains("value 2"));
 		Assert.assertFalse(values.contains("value 3"));
 
-		try (CloseableIterator<String> iterator = values.iterator()) {
+		try (CloseableIterator<?> iterator = values.iterator()) {
 			Set<String> iterated = IteratorUtil.toSet(values.iterator());
 			Assert.assertEquals(2, iterated.size());
+		}
+
+		try (CloseableIterator<String> iterator = values.iterator()) {
+			Assert.assertEquals(2, IteratorUtil.count(iterator));
 		}
 
 		database.getJdbcConnection().close();

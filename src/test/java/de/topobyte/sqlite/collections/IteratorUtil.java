@@ -24,6 +24,16 @@ import java.util.Set;
 public class IteratorUtil
 {
 
+	public static int count(Iterator<?> iterator)
+	{
+		int count = 0;
+		while (iterator.hasNext()) {
+			iterator.next();
+			count++;
+		}
+		return count;
+	}
+
 	public static <E> Set<E> toSet(Iterator<E> iterator)
 	{
 		Set<E> set = new HashSet<>();
