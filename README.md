@@ -25,7 +25,7 @@ See [LGPL.md](LGPL.md) and [GPL.md](GPL.md) for details.
 We provide access to the artifacts via our
 [own Maven repository](https://mvn.topobyte.de) at these coordinates:
 
-    de.topobyte:sqlite-collections:0.0.1
+    de.topobyte:sqlite-collections:0.0.2
 
 You can also browse the repository online:
 
