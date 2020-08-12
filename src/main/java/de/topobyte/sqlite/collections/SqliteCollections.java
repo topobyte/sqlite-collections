@@ -163,7 +163,7 @@ public class SqliteCollections
 	{
 		Table t = new Table(table);
 		t.addColumn(ColumnClass.INT, columnKeys);
-		t.addColumn(ColumnClass.VARCHAR, columnValues);
+		t.addColumn(ColumnClass.BLOB, columnValues);
 		ArgumentSetterInt setterKeys = new ArgumentSetterInt();
 		ArgumentSetterBlob setterValues = new ArgumentSetterBlob();
 		ResultGetterInt getterKeys = new ResultGetterInt();
@@ -240,7 +240,7 @@ public class SqliteCollections
 	{
 		Table t = new Table(table);
 		t.addColumn(ColumnClass.LONG, columnKeys);
-		t.addColumn(ColumnClass.VARCHAR, columnValues);
+		t.addColumn(ColumnClass.BLOB, columnValues);
 		ArgumentSetterLong setterKeys = new ArgumentSetterLong();
 		ArgumentSetterBlob setterValues = new ArgumentSetterBlob();
 		ResultGetterLong getterKeys = new ResultGetterLong();
@@ -320,7 +320,7 @@ public class SqliteCollections
 	{
 		Table t = new Table(table);
 		t.addColumn(ColumnClass.DOUBLE, columnKeys);
-		t.addColumn(ColumnClass.VARCHAR, columnValues);
+		t.addColumn(ColumnClass.BLOB, columnValues);
 		ArgumentSetterDouble setterKeys = new ArgumentSetterDouble();
 		ArgumentSetterBlob setterValues = new ArgumentSetterBlob();
 		ResultGetterDouble getterKeys = new ResultGetterDouble();
@@ -400,7 +400,7 @@ public class SqliteCollections
 	{
 		Table t = new Table(table);
 		t.addColumn(ColumnClass.VARCHAR, columnKeys);
-		t.addColumn(ColumnClass.VARCHAR, columnValues);
+		t.addColumn(ColumnClass.BLOB, columnValues);
 		ArgumentSetterString setterKeys = new ArgumentSetterString();
 		ArgumentSetterBlob setterValues = new ArgumentSetterBlob();
 		ResultGetterString getterKeys = new ResultGetterString();
@@ -415,7 +415,7 @@ public class SqliteCollections
 			String columnValues)
 	{
 		Table t = new Table(table);
-		t.addColumn(ColumnClass.VARCHAR, columnKeys);
+		t.addColumn(ColumnClass.BLOB, columnKeys);
 		t.addColumn(ColumnClass.INT, columnValues);
 		ArgumentSetterBlob setterKeys = new ArgumentSetterBlob();
 		ArgumentSetterInt setterValues = new ArgumentSetterInt();
@@ -430,7 +430,7 @@ public class SqliteCollections
 			String table, String columnKeys, String columnValues)
 	{
 		Table t = new Table(table);
-		t.addColumn(ColumnClass.VARCHAR, columnKeys);
+		t.addColumn(ColumnClass.BLOB, columnKeys);
 		t.addColumn(ColumnClass.LONG, columnValues);
 		ArgumentSetterBlob setterKeys = new ArgumentSetterBlob();
 		ArgumentSetterLong setterValues = new ArgumentSetterLong();
@@ -446,7 +446,7 @@ public class SqliteCollections
 			String columnValues)
 	{
 		Table t = new Table(table);
-		t.addColumn(ColumnClass.VARCHAR, columnKeys);
+		t.addColumn(ColumnClass.BLOB, columnKeys);
 		t.addColumn(ColumnClass.DOUBLE, columnValues);
 		ArgumentSetterBlob setterKeys = new ArgumentSetterBlob();
 		ArgumentSetterDouble setterValues = new ArgumentSetterDouble();
@@ -462,7 +462,7 @@ public class SqliteCollections
 			String columnValues)
 	{
 		Table t = new Table(table);
-		t.addColumn(ColumnClass.VARCHAR, columnKeys);
+		t.addColumn(ColumnClass.BLOB, columnKeys);
 		t.addColumn(ColumnClass.VARCHAR, columnValues);
 		ArgumentSetterBlob setterKeys = new ArgumentSetterBlob();
 		ArgumentSetterString setterValues = new ArgumentSetterString();
@@ -478,8 +478,8 @@ public class SqliteCollections
 			String columnValues)
 	{
 		Table t = new Table(table);
-		t.addColumn(ColumnClass.VARCHAR, columnKeys);
-		t.addColumn(ColumnClass.VARCHAR, columnValues);
+		t.addColumn(ColumnClass.BLOB, columnKeys);
+		t.addColumn(ColumnClass.BLOB, columnValues);
 		ArgumentSetterBlob setterKeys = new ArgumentSetterBlob();
 		ArgumentSetterBlob setterValues = new ArgumentSetterBlob();
 		ResultGetterBlob getterKeys = new ResultGetterBlob();
