@@ -29,7 +29,7 @@ targetCompatibility = 1.8
 
 dependencies {
     api 'de.topobyte:luqe-core:0.2.1'
-    api 'de.topobyte:jsqltables:0.1.0'
+    api 'de.topobyte:jsqltables:0.1.1'
     api 'org.slf4j:slf4j-api:1.7.25'
     testImplementation 'de.topobyte:luqe-jdbc:0.2.1'
     testRuntimeOnly 'org.xerial:sqlite-jdbc:3.27.2.1'

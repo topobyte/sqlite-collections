@@ -28,7 +28,7 @@ public class GenerateMapFactories
 		LONG("long", "Long", ColumnClass.LONG, "Long"),
 		DOUBLE("double", "Double", ColumnClass.DOUBLE, "Double"),
 		STRING("String", "String", ColumnClass.VARCHAR, "String"),
-		BLOB("byte[]", "byte[]", ColumnClass.VARCHAR, "Blob");
+		BLOB("byte[]", "byte[]", ColumnClass.BLOB, "Blob");
 
 		private String primitive;
 		private String boxedType;
