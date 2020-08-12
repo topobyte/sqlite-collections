@@ -56,6 +56,19 @@ public class SqliteCollections
 				new ArgumentSetterEntries<>(setterKeys, setterValues));
 	}
 
+	public static TableSet<Integer> intSet(IConnection connection, Table table)
+	{
+		return new TableSet<>(connection, table, new ArgumentSetterInt(),
+				new ResultGetterInt());
+	}
+
+	public static TableSet<Integer> intSet(IConnection connection, Table table,
+			int indexValues)
+	{
+		return new TableSet<>(connection, table, new ArgumentSetterInt(),
+				new ResultGetterInt(), indexValues);
+	}
+
 	public static TableSet<Long> longSet(IConnection connection, Table table)
 	{
 		return new TableSet<>(connection, table, new ArgumentSetterLong(),
@@ -67,6 +80,20 @@ public class SqliteCollections
 	{
 		return new TableSet<>(connection, table, new ArgumentSetterLong(),
 				new ResultGetterLong(), indexValues);
+	}
+
+	public static TableSet<Double> doubleSet(IConnection connection,
+			Table table)
+	{
+		return new TableSet<>(connection, table, new ArgumentSetterDouble(),
+				new ResultGetterDouble());
+	}
+
+	public static TableSet<Double> doubleSet(IConnection connection,
+			Table table, int indexValues)
+	{
+		return new TableSet<>(connection, table, new ArgumentSetterDouble(),
+				new ResultGetterDouble(), indexValues);
 	}
 
 	public static TableSet<String> stringSet(IConnection connection,
@@ -81,6 +108,19 @@ public class SqliteCollections
 	{
 		return new TableSet<>(connection, table, new ArgumentSetterString(),
 				new ResultGetterString(), indexValues);
+	}
+
+	public static TableSet<byte[]> blobSet(IConnection connection, Table table)
+	{
+		return new TableSet<>(connection, table, new ArgumentSetterBlob(),
+				new ResultGetterBlob());
+	}
+
+	public static TableSet<byte[]> blobSet(IConnection connection, Table table,
+			int indexValues)
+	{
+		return new TableSet<>(connection, table, new ArgumentSetterBlob(),
+				new ResultGetterBlob(), indexValues);
 	}
 
 }
