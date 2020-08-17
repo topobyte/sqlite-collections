@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.topobyte.jsqltables.dialect.SqliteDialect;
+import de.topobyte.jsqltables.index.Indexes;
 import de.topobyte.jsqltables.query.Delete;
 import de.topobyte.jsqltables.query.Select;
 import de.topobyte.jsqltables.query.Update;
@@ -29,6 +30,7 @@ import de.topobyte.jsqltables.query.where.Comparison;
 import de.topobyte.jsqltables.query.where.SingleCondition;
 import de.topobyte.jsqltables.table.QueryBuilder;
 import de.topobyte.jsqltables.table.Table;
+import de.topobyte.jsqltables.table.TableColumn;
 import de.topobyte.luqe.iface.IConnection;
 import de.topobyte.luqe.iface.IPreparedStatement;
 import de.topobyte.luqe.iface.IResultSet;
@@ -76,6 +78,22 @@ public class TableMap<K, V> extends AbstractTableBased implements Map<K, V>
 	{
 		QueryBuilder qb = new QueryBuilder(new SqliteDialect());
 		String create = qb.create(table);
+		connection.execute(create);
+	}
+
+	public void createKeyIndex() throws QueryException
+	{
+		TableColumn column = table.getColumn(indexKeys);
+		String create = Indexes.createStatement(table.getName(), "index_keys",
+				column.getName());
+		connection.execute(create);
+	}
+
+	public void createKeyValues() throws QueryException
+	{
+		TableColumn column = table.getColumn(indexValues);
+		String create = Indexes.createStatement(table.getName(), "index_values",
+				column.getName());
 		connection.execute(create);
 	}
 
