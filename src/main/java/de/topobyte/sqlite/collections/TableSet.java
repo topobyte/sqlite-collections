@@ -20,9 +20,13 @@ package de.topobyte.sqlite.collections;
 import java.util.Collection;
 import java.util.Set;
 
+import de.topobyte.jsqltables.dialect.SqliteDialect;
+import de.topobyte.jsqltables.index.Indexes;
 import de.topobyte.jsqltables.query.Select;
 import de.topobyte.jsqltables.query.select.NormalColumn;
+import de.topobyte.jsqltables.table.QueryBuilder;
 import de.topobyte.jsqltables.table.Table;
+import de.topobyte.jsqltables.table.TableColumn;
 import de.topobyte.luqe.iface.IConnection;
 import de.topobyte.luqe.iface.IPreparedStatement;
 import de.topobyte.luqe.iface.IResultSet;
@@ -50,6 +54,21 @@ public class TableSet<E> extends AbstractTableBased implements Set<E>
 		this.argSetter = argSetter;
 		this.resultGetter = resultGetter;
 		this.indexValues = indexValues;
+	}
+
+	public void createTable() throws QueryException
+	{
+		QueryBuilder qb = new QueryBuilder(new SqliteDialect());
+		String create = qb.create(table);
+		connection.execute(create);
+	}
+
+	public void createIndex() throws QueryException
+	{
+		TableColumn column = table.getColumn(indexValues);
+		String create = Indexes.createStatement(table.getName(), "index",
+				column.getName());
+		connection.execute(create);
 	}
 
 	@Override
