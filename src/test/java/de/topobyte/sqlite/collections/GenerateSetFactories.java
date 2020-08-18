@@ -17,51 +17,37 @@
 
 package de.topobyte.sqlite.collections;
 
-public class GenerateMapFactories
+public class GenerateSetFactories
 {
 
 	public static void main(String[] args)
 	{
 		for (Type a : Type.values()) {
-			for (Type b : Type.values()) {
-				System.out.println(generate(a, b));
-			}
+			System.out.println(generate(a));
 		}
 	}
 
-	private static String generate(Type a, Type b)
+	private static String generate(Type a)
 	{
 		StringBuilder buffer = new StringBuilder();
 
-		line(buffer, String.format("public static TableMap<%s, %s> get%s%sMap(",
-				a.boxedType, b.boxedType, a.sqlName, b.sqlName));
+		line(buffer, String.format("public static TableSet<%s> get%sSet(",
+				a.boxedType, a.sqlName));
 		line(buffer,
-				"    IConnection connection, String table, String columnKeys,");
-		line(buffer, "    String columnValues)");
+				"    IConnection connection, String table, String columnValues)");
 		line(buffer, "{");
 
 		line(buffer, "  Table t = new Table(table);");
-		line(buffer, String.format("  t.addColumn(ColumnClass.%s, columnKeys);",
-				a.cc));
 		line(buffer, String
-				.format("  t.addColumn(ColumnClass.%s, columnValues);", b.cc));
-		line(buffer, String.format(
-				"  ArgumentSetter%s setterKeys = new ArgumentSetter%1$s();",
-				a.sqlName));
+				.format("  t.addColumn(ColumnClass.%s, columnValues);", a.cc));
 		line(buffer, String.format(
 				"  ArgumentSetter%s setterValues = new ArgumentSetter%1$s();",
-				b.sqlName));
-		line(buffer,
-				String.format(
-						"  ResultGetter%s getterKeys = new ResultGetter%1$s();",
-						a.sqlName));
+				a.sqlName));
 		line(buffer, String.format(
 				"  ResultGetter%s getterValues = new ResultGetter%1$s();",
-				b.sqlName));
-		line(buffer, "  return new TableMap<>(connection, t, //");
-		line(buffer, "    setterKeys, getterKeys, setterValues, getterValues,");
+				a.sqlName));
 		line(buffer,
-				"    new ArgumentSetterEntries<>(setterKeys, setterValues));");
+				"  return new TableSet<>(connection, t, setterValues, getterValues);");
 		line(buffer, "}");
 		return buffer.toString();
 	}

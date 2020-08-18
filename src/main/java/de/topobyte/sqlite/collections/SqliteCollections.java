@@ -91,6 +91,59 @@ public class SqliteCollections
 				new ResultGetterBlob(), indexValues);
 	}
 
+	// The following methods are generated, use GenerateSetFactories to
+	// regenerate
+
+	public static TableSet<Integer> getIntSet(IConnection connection,
+			String table, String columnValues)
+	{
+		Table t = new Table(table);
+		t.addColumn(ColumnClass.INT, columnValues);
+		ArgumentSetterInt setterValues = new ArgumentSetterInt();
+		ResultGetterInt getterValues = new ResultGetterInt();
+		return new TableSet<>(connection, t, setterValues, getterValues);
+	}
+
+	public static TableSet<Long> getLongSet(IConnection connection,
+			String table, String columnValues)
+	{
+		Table t = new Table(table);
+		t.addColumn(ColumnClass.LONG, columnValues);
+		ArgumentSetterLong setterValues = new ArgumentSetterLong();
+		ResultGetterLong getterValues = new ResultGetterLong();
+		return new TableSet<>(connection, t, setterValues, getterValues);
+	}
+
+	public static TableSet<Double> getDoubleSet(IConnection connection,
+			String table, String columnValues)
+	{
+		Table t = new Table(table);
+		t.addColumn(ColumnClass.DOUBLE, columnValues);
+		ArgumentSetterDouble setterValues = new ArgumentSetterDouble();
+		ResultGetterDouble getterValues = new ResultGetterDouble();
+		return new TableSet<>(connection, t, setterValues, getterValues);
+	}
+
+	public static TableSet<String> getStringSet(IConnection connection,
+			String table, String columnValues)
+	{
+		Table t = new Table(table);
+		t.addColumn(ColumnClass.VARCHAR, columnValues);
+		ArgumentSetterString setterValues = new ArgumentSetterString();
+		ResultGetterString getterValues = new ResultGetterString();
+		return new TableSet<>(connection, t, setterValues, getterValues);
+	}
+
+	public static TableSet<byte[]> getBlobSet(IConnection connection,
+			String table, String columnValues)
+	{
+		Table t = new Table(table);
+		t.addColumn(ColumnClass.BLOB, columnValues);
+		ArgumentSetterBlob setterValues = new ArgumentSetterBlob();
+		ResultGetterBlob getterValues = new ResultGetterBlob();
+		return new TableSet<>(connection, t, setterValues, getterValues);
+	}
+
 	// The following methods are generated, use GenerateMapFactories to
 	// regenerate
 
