@@ -247,6 +247,7 @@ public class TableMap<K, V> extends AbstractTableBased implements Map<K, V>
 			for (K key : keys) {
 				V value = m.get(key);
 
+				// TODO: use prepared-optimized get()
 				V stored = get(key);
 				if (stored == null) {
 					if (stmtInsert == null) {

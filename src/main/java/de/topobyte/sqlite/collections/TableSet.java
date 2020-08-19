@@ -22,8 +22,11 @@ import java.util.Set;
 
 import de.topobyte.jsqltables.dialect.SqliteDialect;
 import de.topobyte.jsqltables.index.Indexes;
+import de.topobyte.jsqltables.query.Delete;
 import de.topobyte.jsqltables.query.Select;
 import de.topobyte.jsqltables.query.select.NormalColumn;
+import de.topobyte.jsqltables.query.where.Comparison;
+import de.topobyte.jsqltables.query.where.SingleCondition;
 import de.topobyte.jsqltables.table.QueryBuilder;
 import de.topobyte.jsqltables.table.Table;
 import de.topobyte.jsqltables.table.TableColumn;
@@ -99,15 +102,61 @@ public class TableSet<E> extends AbstractTableBased implements Set<E>
 	}
 
 	@Override
-	public boolean add(E e)
+	public boolean add(E value)
 	{
-		throw new UnsupportedOperationException();
+		if (contains(value)) {
+			return false;
+		}
+		try {
+			tryInsert(value);
+		} catch (QueryException e) {
+			throw new RuntimeException("Error in add()", e);
+		}
+		return true;
+	}
+
+	protected String insert()
+	{
+		QueryBuilder qb = new QueryBuilder(new SqliteDialect());
+		return qb.insert(table);
+	}
+
+	protected void tryInsert(E value) throws QueryException
+	{
+		String sql = insert();
+
+		try (IPreparedStatement stmt = connection.prepareStatement(sql)) {
+			argSetter.setArguments(stmt, 1, value);
+			stmt.execute();
+		}
 	}
 
 	@Override
 	public boolean remove(Object o)
 	{
-		throw new UnsupportedOperationException();
+		try {
+			return tryRemove(o);
+		} catch (QueryException e) {
+			throw new RuntimeException("Error in remove()", e);
+		}
+	}
+
+	private boolean tryRemove(Object o) throws QueryException
+	{
+		if (!contains(o)) {
+			return false;
+		}
+
+		Delete delete = new Delete(table);
+		delete.where(new SingleCondition(null,
+				table.getColumn(indexValues).getName(), Comparison.EQUAL));
+
+		try (IPreparedStatement stmt = connection
+				.prepareStatement(delete.sql())) {
+			argSetter.setArguments(stmt, 1, (E) o);
+			stmt.execute();
+		}
+		return true;
 	}
 
 	@Override
@@ -119,7 +168,37 @@ public class TableSet<E> extends AbstractTableBased implements Set<E>
 	@Override
 	public boolean addAll(Collection<? extends E> c)
 	{
-		throw new UnsupportedOperationException();
+		try {
+			return tryAddAll(c);
+		} catch (Throwable e) {
+			throw new RuntimeException("Error in addAll()", e);
+		}
+	}
+
+	private boolean tryAddAll(Collection<? extends E> c) throws Throwable
+	{
+		boolean changed = false;
+		IPreparedStatement stmtInsert = null;
+		try {
+			for (E value : c) {
+				// TODO: use prepared-optimized contains()
+				if (contains(value)) {
+					continue;
+				}
+				if (stmtInsert == null) {
+					String insert = insert();
+					stmtInsert = connection.prepareStatement(insert);
+					changed = true;
+				}
+				argSetter.setArguments(stmtInsert, 1, value);
+				stmtInsert.execute();
+			}
+			return changed;
+		} catch (Throwable t) {
+			throw (t);
+		} finally {
+			CloseUtils.closeSilently(stmtInsert);
+		}
 	}
 
 	@Override
@@ -130,12 +209,6 @@ public class TableSet<E> extends AbstractTableBased implements Set<E>
 
 	@Override
 	public boolean removeAll(Collection<?> c)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void clear()
 	{
 		throw new UnsupportedOperationException();
 	}
