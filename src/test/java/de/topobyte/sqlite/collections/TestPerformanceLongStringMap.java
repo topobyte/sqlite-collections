@@ -58,7 +58,7 @@ public class TestPerformanceLongStringMap
 		map = map(database);
 		map.createTable();
 		// (1) create the index
-		map.createKeyIndex();
+		map.createIndexKeys();
 	}
 
 	@After

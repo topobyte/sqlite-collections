@@ -86,12 +86,12 @@ public class TableMap<K, V> extends AbstractTableBased implements Map<K, V>
 		connection.execute(create);
 	}
 
-	public void createKeyIndex() throws QueryException
+	public void createIndexKeys() throws QueryException
 	{
-		createKeyIndex(false);
+		createIndexKeys(false);
 	}
 
-	public void createKeyIndex(boolean ignoreExisting) throws QueryException
+	public void createIndexKeys(boolean ignoreExisting) throws QueryException
 	{
 		TableColumn column = table.getColumn(indexKeys);
 		String create = Indexes.createStatement(table.getName(), "index_keys",
@@ -99,12 +99,12 @@ public class TableMap<K, V> extends AbstractTableBased implements Map<K, V>
 		connection.execute(create);
 	}
 
-	public void createKeyValues() throws QueryException
+	public void createIndexValues() throws QueryException
 	{
-		createKeyValues(false);
+		createIndexValues(false);
 	}
 
-	public void createKeyValues(boolean ignoreExisting) throws QueryException
+	public void createIndexValues(boolean ignoreExisting) throws QueryException
 	{
 		TableColumn column = table.getColumn(indexValues);
 		String create = Indexes.createStatement(table.getName(), "index_values",
