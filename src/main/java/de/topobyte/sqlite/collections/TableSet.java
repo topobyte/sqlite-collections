@@ -61,16 +61,26 @@ public class TableSet<E> extends AbstractTableBased implements Set<E>
 
 	public void createTable() throws QueryException
 	{
+		createTable(false);
+	}
+
+	public void createTable(boolean ignoreExisting) throws QueryException
+	{
 		QueryBuilder qb = new QueryBuilder(new SqliteDialect());
-		String create = qb.create(table);
+		String create = qb.create(table, ignoreExisting);
 		connection.execute(create);
 	}
 
 	public void createIndex() throws QueryException
 	{
+		createIndex(false);
+	}
+
+	public void createIndex(boolean ignoreExisting) throws QueryException
+	{
 		TableColumn column = table.getColumn(indexValues);
 		String create = Indexes.createStatement(table.getName(), "index",
-				column.getName());
+				ignoreExisting, column.getName());
 		connection.execute(create);
 	}
 

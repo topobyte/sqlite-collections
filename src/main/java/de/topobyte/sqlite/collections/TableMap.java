@@ -76,24 +76,39 @@ public class TableMap<K, V> extends AbstractTableBased implements Map<K, V>
 
 	public void createTable() throws QueryException
 	{
+		createTable(false);
+	}
+
+	public void createTable(boolean ignoreExisting) throws QueryException
+	{
 		QueryBuilder qb = new QueryBuilder(new SqliteDialect());
-		String create = qb.create(table);
+		String create = qb.create(table, ignoreExisting);
 		connection.execute(create);
 	}
 
 	public void createKeyIndex() throws QueryException
 	{
+		createKeyIndex(false);
+	}
+
+	public void createKeyIndex(boolean ignoreExisting) throws QueryException
+	{
 		TableColumn column = table.getColumn(indexKeys);
 		String create = Indexes.createStatement(table.getName(), "index_keys",
-				column.getName());
+				ignoreExisting, column.getName());
 		connection.execute(create);
 	}
 
 	public void createKeyValues() throws QueryException
 	{
+		createKeyValues(false);
+	}
+
+	public void createKeyValues(boolean ignoreExisting) throws QueryException
+	{
 		TableColumn column = table.getColumn(indexValues);
 		String create = Indexes.createStatement(table.getName(), "index_values",
-				column.getName());
+				ignoreExisting, column.getName());
 		connection.execute(create);
 	}
 
