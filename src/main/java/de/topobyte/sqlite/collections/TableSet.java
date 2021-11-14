@@ -79,7 +79,7 @@ public class TableSet<E> extends AbstractTableBased implements Set<E>
 	public void createIndex(boolean ignoreExisting) throws QueryException
 	{
 		TableColumn column = table.getColumn(indexValues);
-		String create = Indexes.createStatement(table.getName(), "index",
+		String create = Indexes.createStatement(table.getName(), "index_values",
 				ignoreExisting, column.getName());
 		connection.execute(create);
 	}
