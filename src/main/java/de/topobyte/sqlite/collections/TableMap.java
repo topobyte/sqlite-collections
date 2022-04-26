@@ -231,7 +231,7 @@ public class TableMap<K, V> extends AbstractTableBased implements Map<K, V>
 		}
 	}
 
-	protected String tryUpdate(K key, V value) throws QueryException
+	protected void tryUpdate(K key, V value) throws QueryException
 	{
 		String sql = update();
 
@@ -240,7 +240,6 @@ public class TableMap<K, V> extends AbstractTableBased implements Map<K, V>
 			argSetterKeys.setArguments(stmt, 3, key);
 			stmt.execute();
 		}
-		return null;
 	}
 
 	@Override
