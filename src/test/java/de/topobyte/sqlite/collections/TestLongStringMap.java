@@ -227,4 +227,29 @@ public class TestLongStringMap
 		testAssumptionsAfterInsertion(map);
 	}
 
+	@Test
+	public void testReplace()
+	{
+		Assert.assertTrue(map.isEmpty());
+		Assert.assertEquals(0, map.size());
+
+		insertSomeData(map);
+
+		testAssumptionsAfterInsertion(map);
+
+		map.put(1L, "new value");
+
+		Assert.assertEquals("new value", map.get(1L));
+		Assert.assertEquals("value 2", map.get(2L));
+
+		Assert.assertTrue(map.containsKey(1L));
+		Assert.assertTrue(map.containsKey(2L));
+		Assert.assertFalse(map.containsKey(3L));
+
+		Assert.assertFalse(map.containsValue("value 1"));
+		Assert.assertTrue(map.containsValue("new value"));
+		Assert.assertTrue(map.containsValue("value 2"));
+		Assert.assertFalse(map.containsValue("value 3"));
+	}
+
 }

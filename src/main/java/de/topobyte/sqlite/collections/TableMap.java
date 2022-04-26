@@ -237,6 +237,7 @@ public class TableMap<K, V> extends AbstractTableBased implements Map<K, V>
 
 		try (IPreparedStatement stmt = connection.prepareStatement(sql)) {
 			argSetterEntries.setArguments(stmt, 1, new MapEntry<>(key, value));
+			argSetterKeys.setArguments(stmt, 3, key);
 			stmt.execute();
 		}
 		return null;
